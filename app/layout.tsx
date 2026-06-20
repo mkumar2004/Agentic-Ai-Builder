@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const dm_sans = DM_Sans({
+  subsets: ['latin'],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +30,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <ClerkProvider>
+
+   
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${lora.variable} ${dm_sans.variable} font-sans overflow-x-hidden`}>
+        <ThemeProvider>
+          <Header />
+          <main>{children}</main>
+        </ThemeProvider>
+      </body>
     </html>
+     </ClerkProvider>
   );
 }
