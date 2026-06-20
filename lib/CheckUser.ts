@@ -1,0 +1,61 @@
+import { Plan } from "@/types/plan";
+import { db } from "./prisma";
+import { currentUser,auth } from "@clerk/nextjs/server"
+import { PLANS } from "@/lib/constants"
+
+
+const getCurrentPlan = async():Promise<Plan>=>{
+    const { has} = await auth();
+    if (has({plan:"pro"})) return "pro";
+    if (has({plan:"starter"})) return "starter";
+    if(has({plan:"enterprice"})) return "enterprice";
+    return "free";
+    
+}
+
+export const checkuser = async ()=>{
+    const user = await currentUser();
+
+    if(!user) return null;
+
+    try{
+       const currentPlan = await getCurrentPlan();
+        
+        const existing = await db.user.findUnique({
+            where: {clerkId: user.id},
+        })
+         // exsting user 
+        if(existing){
+            if(existing.plan !== currentPlan){
+                 return await db.user.update({
+                    where :{clerkId:user.id},
+                    data:{
+                        plan:currentPlan,
+                        credits:existing.credits + PLANS[currentPlan].credits,
+                    },
+                 })
+            }
+            return existing;
+        }
+
+        // new user 
+        return await db.user.create({
+            data:{
+                clerkId:user.id,
+                name:`${user.firstName ?? ""} ${user.lastName ?? ""} `.trim(),
+                email:user.emailAddresses[0]?.emailAddress ?? "",
+                imageUrl:user.imageUrl ?? "",
+                credits:PLANS.free.credits,
+                plan:"free",
+            }
+        })
+
+
+    }
+
+    
+    catch (error){
+       console.error("checkUser Error",error);
+       return null;
+    }
+}
