@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -36,7 +35,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${lora.variable} ${dm_sans.variable} font-sans overflow-x-hidden`}>
         <ThemeProvider>
-          <Header />
           <main>{children}</main>
         </ThemeProvider>
       </body>

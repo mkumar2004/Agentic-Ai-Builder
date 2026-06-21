@@ -10,9 +10,12 @@ import { motion } from "motion/react";
 import { Textarea } from "@/components/ui/textarea";
 import { FrameworksSection } from "@/components/frameworks-section";
 import { FaqSection } from "@/components/faq-section";
+import Header from "@/components/Header";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+      <Header />
       {/* HERO SECTION */}
       <section className="relative w-full overflow-hidden min-h-[90vh] flex flex-col items-center justify-center pt-20 pb-32">
         <HoleBackground className="absolute inset-0 pointer-events-none" />
